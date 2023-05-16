@@ -1,4 +1,4 @@
-const base_url = "https://retoolapi.dev/FF5oPF/WizardsAndWitches";
+const base_url = "https://retoolapi.dev/ebGkcv/WizardsAndWitches";
 
 $(function () {
     WizardsAndWitchesListing();
@@ -44,11 +44,24 @@ function WizardsAndWitchesListing() {
                 <td class="text-center">${WizardsAndWitches.Profession}</td>
                 <td class="text-center">${WizardsAndWitches.house}</td>
                 <td class="text-center">${WizardsAndWitches["wand core"]}</td>
-                <td class="text-center"><i onclick="deletePerson(${WizardsAndWitches.id})" class="fa-solid fa-delete-left"></i></td>
+                <td class="text-center"><i onclick="WizardAndWitchesDelete(${WizardsAndWitches.id})" class="fa-solid fa-delete-left"></i></td>
                 </tr>`;
             })
             $("#tablazat").html(html);
         },
         "json"
     );
+}
+
+function WizardAndWitchesDelete(Id){
+    $.ajax({
+        type: "DELETE",
+        url: `${base_url}/${Id}`,
+        dataType: "json",
+        success: function (data, textStatus, jqXHR) {
+            if (textStatus === "success"){
+                WizardsAndWitchesListing();
+            };
+        }
+    });
 }
