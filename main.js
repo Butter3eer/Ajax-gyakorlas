@@ -3,6 +3,37 @@ const base_url = "https://retoolapi.dev/ebGkcv/WizardsAndWitches";
 $(function () {
     WizardsAndWitchesListing();
 
+    $("#save").click(function (e) {
+        e.preventDefault();
+        const name = $("#name").val();
+        const patronus = $("#patronus").val();
+        const profession = $("#profession").val();
+        const house = $("#house").val();
+        const wandCore = $("#wandCore").val();
+        const id = $("#personId").val();
+
+        const WizardsAndWitches = {
+            id: id,
+            name: name,
+            patronus: patronus,
+            Profession: profession,
+            house: house,
+            "wand core": wandCore
+        };
+        $.ajax({
+            type: "PUT",
+            url: `${base_url}/${id}`,
+            contentType: "application/json",
+            dataType: "json",
+            data: JSON.stringify(WizardsAndWitches),
+            success: function (data, textStatus, jqXHR) {
+                if (textStatus === "success") {
+                    WizardsAndWitchesListing();
+                }
+            },
+        });
+    });
+
     $("#newWizardsAndWitchesForm").submit(function (e) { 
         e.preventDefault();
         const name = $("#name").val();
@@ -45,6 +76,7 @@ function WizardsAndWitchesListing() {
                 <td class="text-center">${WizardsAndWitches.house}</td>
                 <td class="text-center">${WizardsAndWitches["wand core"]}</td>
                 <td class="text-center"><i onclick="WizardAndWitchesDelete(${WizardsAndWitches.id})" class="fa-solid fa-delete-left"></i></td>
+                <td class="text-center"><i onclick="readWandW(${WizardsAndWitches.id})" class="fa-solid fa-arrows-rotate"></i></td>
                 </tr>`;
             })
             $("#tablazat").html(html);
@@ -64,4 +96,20 @@ function WizardAndWitchesDelete(Id){
             };
         }
     });
+}
+
+function readWandW(Id) {
+    $.get(`${base_url}/${Id}`,
+        function (data, textStatus) {
+            if (textStatus === "success") {
+                $("#name").val(data.name);
+                $("#patronus").val(data.patronus);
+                $("#profession").val(data.Profession);
+                $("#house").val(data.house);
+                $("#wandCore").val(data["wand core"]);
+                $("#personId").val(data.id);
+            }
+        },
+        "json"
+    );
 }
